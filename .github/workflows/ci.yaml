@@ -1,9 +1,9 @@
-name: Mobile Client (Apple)
+name: Build
 
 on:
   push:
     branches:
-      - fork
+      - master
 
 jobs:
   build:
