@@ -1,8 +1,8 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+import java.util.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -77,9 +77,9 @@ kotlin {
 
 mavenPublishing {
     coordinates(
-        "com.valentinilk.shimmer",
+        "com.trainyapp.shimmer",
         "compose-shimmer",
-        "1.3.2",
+        "1.4.0",
     )
     pom {
         name.set("Compose Shimmer")
@@ -109,6 +109,21 @@ mavenPublishing {
             }
         }
     }
-    publishToMavenCentral(SonatypeHost.S01)
-    signAllPublications()
+}
+
+publishing {
+    repositories {
+        maven("https://europe-west3-maven.pkg.dev/mik-music/trainyapp") {
+            credentials {
+                username = "_json_key_base64"
+                password = System.getenv("GOOGLE_KEY")?.toByteArray()?.let {
+                    Base64.getEncoder().encodeToString(it)
+                }
+            }
+
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
 }
