@@ -87,7 +87,7 @@ mavenPublishing {
     coordinates(
         "com.trainyapp.shimmer",
         "compose-shimmer",
-        "1.4.0-SNAPSHOT",
+        "1.5.0-SNAPSHOT",
     )
     pom {
         name.set("Compose Shimmer")
