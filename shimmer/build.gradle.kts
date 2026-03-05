@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import com.android.build.api.variant.impl.KotlinMultiplatformAndroidCompilationImpl
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinHierarchyBuilder
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 import java.util.*
 
@@ -13,22 +16,14 @@ plugins {
     alias(libs.plugins.publish)
 }
 
-android {
-    compileSdk = libs.versions.targetSdk.get().toInt()
-    namespace = "com.valentinilk.shimmer"
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+fun KotlinHierarchyBuilder.withAndroidLibrary() {
+    withAndroidTarget()
+    withCompilations {
+        it is KotlinMultiplatformAndroidCompilationImpl
     }
 }
 
 kotlin {
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyHierarchyTemplate {
         withSourceSetTree(KotlinSourceSetTree.main, KotlinSourceSetTree.test)
         common {
@@ -38,16 +33,29 @@ kotlin {
                 withJvm()
                 withWasmJs()
             }
-            withAndroidTarget()
+            withAndroidLibrary()
         }
     }
 
-    androidTarget {
-        publishLibraryVariants("release")
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_1_8)
+
+    android {
+        compileSdk {
+            version = release(libs.versions.targetSdk.get().toInt())
+            minSdk = libs.versions.minSdk.get().toInt()
         }
+        namespace = "com.valentinilk.shimmer"
+
+//        compileOptions {
+//            sourceCompatibility = JavaVersion.VERSION_1_8
+//            targetCompatibility = JavaVersion.VERSION_1_8
+//        }
     }
+//    androidTarget {
+//        publishLibraryVariants("release")
+//        compilerOptions {
+//            jvmTarget.set(JvmTarget.JVM_1_8)
+//        }
+//    }
 
     jvm()
 
@@ -60,13 +68,13 @@ kotlin {
         browser()
     }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
         commonMain.dependencies {
-            api(compose.foundation)
+            api(libs.compose.foundation)
+            api(libs.compose.runtime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

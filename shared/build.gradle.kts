@@ -11,19 +11,21 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
-android {
-    compileSdk = libs.versions.targetSdk.get().toInt()
-    namespace = "com.valentinilk.shimmer.shared"
-}
 
 kotlin {
     applyDefaultHierarchyTemplate()
 
-    androidTarget {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
+    android {
+        compileSdk {
+            version = release(libs.versions.targetSdk.get().toInt())
         }
+        namespace = "com.valentinilk.shimmer.shared"
     }
+//    androidTarget {
+//        compilerOptions {
+//            jvmTarget = JvmTarget.JVM_1_8
+//        }
+//    }
 
     jvm("desktop")
 
@@ -38,7 +40,7 @@ kotlin {
     }
 
     listOf(
-        iosX64(),
+//        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach {
@@ -52,10 +54,10 @@ kotlin {
             dependencies {
                 arrayOf(
                     projects.shimmer,
-                    compose.runtime,
-                    compose.foundation,
-                    compose.ui,
-                    compose.material3,
+                    libs.compose.runtime,
+                    libs.compose.foundation,
+                    libs.compose.ui,
+                    libs.compose.material3,
                 ).forEach { dependency ->
                     implementation(dependency)
                 }

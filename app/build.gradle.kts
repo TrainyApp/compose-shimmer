@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
 }
 
@@ -23,9 +22,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
 
     buildFeatures {
         compose = true
@@ -35,16 +34,17 @@ android {
 dependencies {
     arrayOf(
         projects.shimmer,
-        libs.compose.bom,
         libs.compose.material,
-        libs.compose.material.icons,
+        libs.compose.material3,
+        libs.compose.material.icons.extended,
         libs.compose.navigation,
         libs.compose.runtime,
         libs.compose.foundation,
         libs.compose.ui,
-        libs.compose.tooling,
+        libs.compose.ui.tooling,
         libs.material,
     ).forEach { dependency ->
         implementation(dependency)
     }
 }
+
